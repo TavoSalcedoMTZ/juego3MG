@@ -30,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         CheckGround();
+        Movement();
     }
 
     // Funcion de movimiento
