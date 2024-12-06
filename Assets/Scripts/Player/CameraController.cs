@@ -64,7 +64,7 @@ public class CameraController : MonoBehaviour
     }
 
     // Funcion para seguir al objetivo
-    void FollowTarget()
+   public void FollowTarget()
     {
         transform.position = targetObject.position;
     }
@@ -80,4 +80,11 @@ public class CameraController : MonoBehaviour
     {
         targetObject = _target;
     }
+}
+
+public interface ICameraState
+{
+    void Enter(CameraController cameraController); // Inicializa el estado
+    void Exit(CameraController cameraController);  // Sale del estado
+    void Update(CameraController cameraController); // Actualiza el estado cada frame
 }
