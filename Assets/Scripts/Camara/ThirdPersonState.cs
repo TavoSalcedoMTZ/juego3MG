@@ -1,20 +1,20 @@
-public class NormalModeState : ICameraState
+public class ThirdPersonState : ICameraState
 {
     public void Enter(CameraController cameraController)
     {
-        // Activamos la rotación normal de la cámara
+        // Re-enable the third-person camera controls
         cameraController.CanRotate(true);
     }
 
     public void Exit(CameraController cameraController)
     {
-        // Desactivamos la rotación al salir del modo normal
+        // Optionally, you could disable third-person controls here if needed
         cameraController.CanRotate(false);
     }
 
     public void Update(CameraController cameraController)
     {
-        // Actualizamos la rotación de la cámara y seguimos al objetivo en el modo normal
+        // Keep rotating the camera in third person mode
         cameraController.Rotate();
         cameraController.FollowTarget();
     }

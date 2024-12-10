@@ -1,90 +1,101 @@
-
-
-using System.Collections;
-using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    // variables publicas
-    public float sensibility;
+    public float sensibility = 2f;
     public Transform cameraJointY;
-
     public Transform targetObject;
 
-    // Variables privadas
     private float xRotation, yRotation;
     private bool canRotate = true;
 
-    // Singleton
-    public CameraController Instance { get; private set; }
+    public CinemachineVirtualCamera virtualCamera;
+    private ICameraState currentState;
 
-    // Comprobacion del singleton
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-            Destroy(this);
-        else
-            Instance = this;
+        if (FindObjectsOfType<CameraController>().Length > 1)
+            Destroy(gameObject);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        // Inicializacion de variables
-        canRotate = true;
+        SetState(new ThirdPersonState());
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        // Si podemos rotar rotamos
-        if (canRotate)
+        currentState?.Update(this);
+
+        if (Input.GetButtonDown("Fire2")) // Cambiar el estado al hacer clic derecho
         {
-            Rotate();
+            SwitchState();
         }
-        
-        // Seguimos al objetivo
-        FollowTarget();
     }
 
-    // Funcion de rotacion
+    private void SwitchState()
+    {
+        if (currentState is ThirdPersonState)
+        {
+            Debug.Log("Cambiando al estado de Aiming");
+            SetState(new AimingState());
+        }
+        else
+        {
+            Debug.Log("Cambiando al estado de Tercera");
+            SetState(new ThirdPersonState());
+        }
+    }
+
+    public void SetState(ICameraState newState)
+    {
+        currentState?.Exit(this);
+        currentState = newState;
+        currentState.Enter(this);
+    }
+
     public void Rotate()
     {
-        // Conseguimos los inputs del mouse
         xRotation += Input.GetAxis("Mouse X") * sensibility;
         yRotation += Input.GetAxis("Mouse Y") * sensibility;
 
-        // Ponemos limitacion en el eje Y
         yRotation = Mathf.Clamp(yRotation, -65, 65);
 
-        // Rotamos los componentes X y Y de la camara
         transform.rotation = Quaternion.Euler(0f, xRotation, 0f);
         cameraJointY.localRotation = Quaternion.Euler(-yRotation, 0f, 0f);
     }
 
-    // Funcion para seguir al objetivo
-   public void FollowTarget()
+    public void FollowTarget()
     {
-        transform.position = targetObject.position;
+        if (targetObject)
+            transform.position = targetObject.position;
     }
 
-    // Funcion para cambiar el estado de la rotacion
     public void CanRotate(bool _state)
     {
         canRotate = _state;
     }
 
-    // Funcion para cambiar el objetivo de la camara
     public void SetTarget(Transform _target)
     {
         targetObject = _target;
     }
-}
 
-public interface ICameraState
-{
-    void Enter(CameraController cameraController); // Inicializa el estado
-    void Exit(CameraController cameraController);  // Sale del estado
-    void Update(CameraController cameraController); // Actualiza el estado cada frame
+    public void AdjustCinemachineFollowOffset(Vector3 newOffset)
+    {
+        if (virtualCamera)
+        {
+            // Obtén el componente CinemachineTransposer
+            var transposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
+            if (transposer)
+            {
+                transposer.m_FollowOffset = newOffset; // Cambia la distancia de seguimiento aquí
+            }
+            else
+            {
+                Debug.LogError("No se encontró el componente CinemachineTransposer en la cámara virtual.");
+            }
+        }
+    }
 }
