@@ -13,7 +13,7 @@ public class BulletController : MonoBehaviour
     {
      
         bullrb=GetComponent<Rigidbody>();
-        bullrb.linearVelocity= this.transform.forward*bulletPower;
+        bullrb.velocity= this.transform.forward*bulletPower;
 
     }
 

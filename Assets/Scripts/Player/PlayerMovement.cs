@@ -8,6 +8,9 @@ public class PlayerMovement : MonoBehaviour
     public float walkSpeed, runSpeed, jumpForce, rotationSpeed;
     public GroundDetector groundDetector;
 
+    public GameObject ArmaActiva1;
+    public GameObject ArmaActiva2;  
+
     private Vector3 vectorMovement, verticalForce;
     private float targetSpeed, currentSpeed;
     private bool isGrounded, canMove;
