@@ -13,6 +13,15 @@ public class CameraController : MonoBehaviour
     public CinemachineVirtualCamera virtualCamera;
     private ICameraState currentState;
 
+    // Variables para el suavizado del zoom
+    private float targetCameraDistance; // Distancia objetivo del zoom
+    private float currentVelocity = 0f; // Velocidad para SmoothDamp
+    public float smoothTime = 0.2f; // Tiempo de suavizado
+
+    // Ángulos de rotación prefijados para el estado Aiming
+    public float aimingXRotation = 0f;
+    public float aimingYRotation = 15f;
+
     private void Awake()
     {
         if (FindObjectsOfType<CameraController>().Length > 1)
@@ -32,6 +41,13 @@ public class CameraController : MonoBehaviour
         {
             SwitchState();
         }
+
+        if (canRotate) // Solo permite rotar si `canRotate` es verdadero
+        {
+            Rotate();
+        }
+
+        SmoothCameraZoom(); // Actualizar suavizado del zoom
     }
 
     private void SwitchState()
@@ -40,11 +56,14 @@ public class CameraController : MonoBehaviour
         {
             Debug.Log("Cambiando al estado de Aiming");
             SetState(new AimingState());
+            canRotate = false; // Desactivar rotación
+            AlignCameraToAimingView(); // Alinear cámara a la vista prefijada
         }
         else
         {
             Debug.Log("Cambiando al estado de Tercera");
             SetState(new ThirdPersonState());
+            canRotate = true; // Reactivar rotación
         }
     }
 
@@ -82,20 +101,50 @@ public class CameraController : MonoBehaviour
         targetObject = _target;
     }
 
-    public void AdjustCinemachineFollowOffset(Vector3 newOffset)
+    public void AdjustCinemachineFollowOffset(float newCameraDistance)
     {
         if (virtualCamera)
         {
-            // Obtén el componente CinemachineTransposer
-            var transposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
-            if (transposer)
+            // Obtén el componente Cinemachine3rdPersonFollow
+            var thirdPersonFollow = virtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+            if (thirdPersonFollow)
             {
-                transposer.m_FollowOffset = newOffset; // Cambia la distancia de seguimiento aquí
+                targetCameraDistance = newCameraDistance; // Establece la distancia objetivo
             }
             else
             {
-                Debug.LogError("No se encontró el componente CinemachineTransposer en la cámara virtual.");
+                Debug.LogError("No se encontró el componente Cinemachine3rdPersonFollow en la cámara virtual.");
             }
         }
+        else
+        {
+            Debug.LogError("No se ha asignado ninguna cámara virtual.");
+        }
+    }
+
+    private void SmoothCameraZoom()
+    {
+        if (virtualCamera)
+        {
+            // Obtén el componente Cinemachine3rdPersonFollow
+            var thirdPersonFollow = virtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+            if (thirdPersonFollow)
+            {
+                // Interpola suavemente hacia la distancia objetivo
+                thirdPersonFollow.CameraDistance = Mathf.SmoothDamp(
+                    thirdPersonFollow.CameraDistance,
+                    targetCameraDistance,
+                    ref currentVelocity,
+                    smoothTime
+                );
+            }
+        }
+    }
+
+    private void AlignCameraToAimingView()
+    {
+        // Fija la rotación de la cámara a los valores prefijados
+        transform.rotation = Quaternion.Euler(0f, aimingXRotation, 0f);
+        cameraJointY.localRotation = Quaternion.Euler(-aimingYRotation, 0f, 0f);
     }
 }

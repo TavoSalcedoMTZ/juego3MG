@@ -8,7 +8,7 @@ public class AimingState : ICameraState
         cameraController.CanRotate(false);
 
         // Cambiar distancia al apuntar
-        cameraController.AdjustCinemachineFollowOffset(3f);
+        cameraController.AdjustCinemachineFollowOffset(1f);
     }
 
     public void Exit(CameraController cameraController)
@@ -16,7 +16,7 @@ public class AimingState : ICameraState
         Debug.Log("Saliendo de AimingState");
         cameraController.CanRotate(true);
 
-        cameraController.AdjustCinemachineFollowOffset(5f);
+        cameraController.AdjustCinemachineFollowOffset(3.5f);
     }
 
     public void Update(CameraController cameraController)
