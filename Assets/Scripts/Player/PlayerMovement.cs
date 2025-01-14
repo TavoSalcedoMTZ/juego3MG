@@ -32,6 +32,11 @@ public class PlayerMovement : MonoBehaviour
         CheckGround();
         Movement();
         ApplyGravity();
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            SwitchArmas();
+        }
     }
 
     public void Movement()
@@ -126,5 +131,51 @@ public class PlayerMovement : MonoBehaviour
     public void CanMove(bool _state)
     {
         canMove = _state;
+    }
+
+    public void SwitchArmas()
+    {
+        if (ArmaActiva1.activeInHierarchy)
+        {
+
+            ArmaActiva1.SetActive(false);
+            ArmaActiva2.SetActive(true);
+        }
+        else if (ArmaActiva2.activeInHierarchy)
+        {
+            ArmaActiva2 .SetActive(false);
+            ArmaActiva1 .SetActive(true);   
+        }
+    }
+    public void SetArma1(GameObject _arma)
+    {
+        if (ArmaActiva1.activeInHierarchy)
+        {
+
+            ArmaActiva1.SetActive(false);
+            ArmaActiva1 = _arma;
+            ArmaActiva1.SetActive(true);
+        }
+        else
+        { 
+            ArmaActiva1 = _arma;
+
+        }
+        }
+
+    public void SetArma2(GameObject _arma)
+    {
+        if (ArmaActiva2.activeInHierarchy)
+        {
+
+            ArmaActiva2.SetActive(false);
+            ArmaActiva2 = _arma;
+            ArmaActiva2.SetActive(true);
+        }
+        else
+        {
+            ArmaActiva2          = _arma;
+
+        }
     }
 }

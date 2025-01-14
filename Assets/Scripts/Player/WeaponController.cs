@@ -10,6 +10,7 @@ public class WeaponController : MonoBehaviour
     public float tiemporecarga = 2f;
     public int cantidaddebalascargador = 5;
     public Image Filler;
+    public bool canShoot;
     
     public GameObject bullPreFab;
 
@@ -21,10 +22,12 @@ public class WeaponController : MonoBehaviour
     {
         timeSinceLastShot = cadencia;
         cantidaddebalascargador = numerobalas;
+        canShoot=true;
     }
 
     void Update()
     {
+
 
         UpdateFiller();
         Debug.DrawLine(shootSpawn.position, shootSpawn.position + shootSpawn.forward * 10f, Color.blue);
@@ -37,8 +40,10 @@ public class WeaponController : MonoBehaviour
             Vector3 shootDirection = cameraHit.point - shootSpawn.position;
             shootSpawn.rotation = Quaternion.LookRotation(shootDirection);
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && numerobalas > 0 && timeSinceLastShot >= cadencia && !isReloading)
+
+            if (Input.GetKey(KeyCode.Mouse0) && numerobalas > 0 && timeSinceLastShot >= cadencia && !isReloading&& canShoot)
             {
+        
                 Shoot();
                 numerobalas--;
                 timeSinceLastShot = 0f;
@@ -47,7 +52,7 @@ public class WeaponController : MonoBehaviour
 
         timeSinceLastShot += Time.deltaTime;
 
-        if ( Input.GetKeyDown(KeyCode.R) || numerobalas == 0 && !isReloading )
+        if ( Input.GetKeyDown(KeyCode.R) && canShoot || numerobalas == 0 && !isReloading && canShoot )
         {
 
             Debug.Log("Recargando");
