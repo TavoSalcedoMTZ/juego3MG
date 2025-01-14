@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour
 
     private float xRotation, yRotation;
     private bool canRotate = true;
+    public Tienda tienda;
 
     public CinemachineVirtualCamera virtualCamera;
     private ICameraState currentState;
@@ -35,6 +36,15 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+
+        if (tienda.TiendaOpen)
+        {
+            canRotate = false;
+        }
+        else if (!tienda.TiendaOpen)
+        {
+            canRotate=true;
+        }
         currentState?.Update(this);
 
         if (Input.GetButtonDown("Fire2")) // Cambiar el estado al hacer clic derecho
@@ -76,13 +86,17 @@ public class CameraController : MonoBehaviour
 
     public void Rotate()
     {
-        xRotation += Input.GetAxis("Mouse X") * sensibility;
-        yRotation += Input.GetAxis("Mouse Y") * sensibility;
+        if (canRotate)
+        {
+            xRotation += Input.GetAxis("Mouse X") * sensibility;
+            yRotation += Input.GetAxis("Mouse Y") * sensibility;
 
-        yRotation = Mathf.Clamp(yRotation, -65, 65);
+            yRotation = Mathf.Clamp(yRotation, -65, 65);
 
-        transform.rotation = Quaternion.Euler(0f, xRotation, 0f);
-        cameraJointY.localRotation = Quaternion.Euler(-yRotation, 0f, 0f);
+            transform.rotation = Quaternion.Euler(0f, xRotation, 0f);
+            cameraJointY.localRotation = Quaternion.Euler(-yRotation, 0f, 0f);
+        }
+        else { }
     }
 
     public void FollowTarget()

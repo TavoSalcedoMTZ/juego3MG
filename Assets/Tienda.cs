@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Tienda : MonoBehaviour
 {
-    bool TiendaOpen;
+    public bool TiendaOpen;
    public GameObject Panel;
     public GameObject Player;
     public GameObject m4, revolver, escopeta, subfusil;

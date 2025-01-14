@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using TMPro;
 public class WeaponController : MonoBehaviour
 {
     public Transform shootSpawn;
@@ -11,12 +12,14 @@ public class WeaponController : MonoBehaviour
     public int cantidaddebalascargador = 5;
     public Image Filler;
     public bool canShoot;
-    
+    public Tienda tienda;
     public GameObject bullPreFab;
+    public TextMeshProUGUI textobalas;
+   
 
     private float FillerAmout;
     private float timeSinceLastShot = 0f;
-    private bool isReloading = false;
+    public bool isReloading = false;
 
     void Start()
     {
@@ -28,7 +31,18 @@ public class WeaponController : MonoBehaviour
     void Update()
     {
 
+        if (tienda.TiendaOpen)
+        {
+            canShoot = false;
+        }
+        else if (!tienda.TiendaOpen)
+        {
+            canShoot = true;
+        }
 
+
+
+        UpgradeTextoBalas();
         UpdateFiller();
         Debug.DrawLine(shootSpawn.position, shootSpawn.position + shootSpawn.forward * 10f, Color.blue);
         Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * 10f, Color.red);
@@ -43,10 +57,17 @@ public class WeaponController : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Mouse0) && numerobalas > 0 && timeSinceLastShot >= cadencia && !isReloading&& canShoot)
             {
-        
-                Shoot();
-                numerobalas--;
-                timeSinceLastShot = 0f;
+
+                if (!isReloading)
+                {
+                    Shoot();
+                    numerobalas--;
+                    timeSinceLastShot = 0f;
+                }
+                else if (isReloading)
+                {
+
+                }
             }
         }
 
@@ -94,5 +115,12 @@ public class WeaponController : MonoBehaviour
 
 
         }
+    }
+
+    void UpgradeTextoBalas()
+    {
+        textobalas.text = numerobalas.ToString();
+
+
     }
 }

@@ -9,12 +9,13 @@ public class PlayerMovement : MonoBehaviour
     public GroundDetector groundDetector;
 
     public GameObject ArmaActiva1;
-    public GameObject ArmaActiva2;  
-
+    public GameObject ArmaActiva2;
+    public Tienda tienda;
     private Vector3 vectorMovement, verticalForce;
     private float targetSpeed, currentSpeed;
     private bool isGrounded, canMove;
     private CharacterController characterController;
+
 
     private void Start()
     {
@@ -29,6 +30,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!tienda.TiendaOpen)
+        {
+            canMove = true;
+        }
+        else if (tienda.TiendaOpen)
+        {
+            canMove= false;
+        }
         CheckGround();
         Movement();
         ApplyGravity();
