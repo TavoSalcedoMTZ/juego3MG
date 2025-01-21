@@ -10,11 +10,15 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject ArmaActiva1;
     public GameObject ArmaActiva2;
+    public GameObject Desarmado;
     public Tienda tienda;
+    public ComprobadorDeVariables comprobadorDeVariables;
     private Vector3 vectorMovement, verticalForce;
     private float targetSpeed, currentSpeed;
     private bool isGrounded, canMove;
     private CharacterController characterController;
+     public bool ForzandoSwitch;
+    public bool operacioncompletada;
 
 
     private void Start()
@@ -26,10 +30,20 @@ public class PlayerMovement : MonoBehaviour
         vectorMovement = Vector3.zero;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        ForzandoSwitch=false;
     }
 
     private void Update()
+
     {
+        if (comprobadorDeVariables.ForzarSwitchBool)
+        {
+            ForzandoSwitch = true;
+        }
+        {
+            ForzandoSwitch = false;
+        }
+
         if (!tienda.TiendaOpen)
         {
             canMove = true;
@@ -42,9 +56,12 @@ public class PlayerMovement : MonoBehaviour
         Movement();
         ApplyGravity();
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && comprobadorDeVariables.CanSwitch || comprobadorDeVariables.ForzarSwitchBool)
         {
             SwitchArmas();
+        }
+        else
+        {
         }
     }
 
@@ -146,15 +163,45 @@ public class PlayerMovement : MonoBehaviour
     {
         if (ArmaActiva1.activeInHierarchy)
         {
+            if (ForzandoSwitch)
+            {
+                SetArma1(Desarmado);
+                ArmaActiva1.SetActive(false);
+                ArmaActiva2.SetActive(true);
+                ForzandoSwitch = false;
+                operacioncompletada = true;
 
-            ArmaActiva1.SetActive(false);
-            ArmaActiva2.SetActive(true);
+            }
+            else
+            {
+
+                ArmaActiva1.SetActive(false);
+                ArmaActiva2.SetActive(true);
+            }
         }
         else if (ArmaActiva2.activeInHierarchy)
         {
-            ArmaActiva2 .SetActive(false);
-            ArmaActiva1 .SetActive(true);   
+            if (ForzandoSwitch)
+            {
+                SetArma2(Desarmado);
+                ArmaActiva2.SetActive(false);
+                ArmaActiva1.SetActive(true);
+                ForzandoSwitch=false;
+                operacioncompletada = true;
+            }
+            else
+            {
+                ArmaActiva2.SetActive(false);
+                ArmaActiva1.SetActive(true);
+                
+            }
         }
+    }
+
+    void CheckOperacion()
+    {
+        if()
+
     }
     public void SetArma1(GameObject _arma)
     {

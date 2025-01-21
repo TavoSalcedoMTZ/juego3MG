@@ -15,7 +15,12 @@ public class WeaponController : MonoBehaviour
     public Tienda tienda;
     public GameObject bullPreFab;
     public TextMeshProUGUI textobalas;
-   
+    public ComprobadorDeVariables comprobadorDeVariables;
+    public float VidaDeArma=100f;
+    public float DecrementoVidaArma=5;
+    public bool armarota;
+
+
 
     private float FillerAmout;
     private float timeSinceLastShot = 0f;
@@ -30,8 +35,9 @@ public class WeaponController : MonoBehaviour
 
     void Update()
     {
+        CheckArma();
 
-        if (tienda.TiendaOpen)
+        if(tienda.TiendaOpen)
         {
             canShoot = false;
         }
@@ -55,7 +61,7 @@ public class WeaponController : MonoBehaviour
             shootSpawn.rotation = Quaternion.LookRotation(shootDirection);
 
 
-            if (Input.GetKey(KeyCode.Mouse0) && numerobalas > 0 && timeSinceLastShot >= cadencia && !isReloading&& canShoot)
+            if (Input.GetKey(KeyCode.Mouse0) && numerobalas > 0 && timeSinceLastShot >= cadencia && !isReloading&& canShoot && !armarota)
             {
 
                 if (!isReloading)
@@ -73,7 +79,7 @@ public class WeaponController : MonoBehaviour
 
         timeSinceLastShot += Time.deltaTime;
 
-        if ( Input.GetKeyDown(KeyCode.R) && canShoot || numerobalas == 0 && !isReloading && canShoot )
+        if ( Input.GetKeyDown(KeyCode.R) && canShoot && !armarota || numerobalas == 0 && !isReloading && canShoot && !armarota )
         {
 
             Debug.Log("Recargando");
@@ -83,6 +89,7 @@ public class WeaponController : MonoBehaviour
 
     public void Shoot()
     {
+        VidaDeArma =VidaDeArma -DecrementoVidaArma;
         Instantiate(bullPreFab, shootSpawn.position, shootSpawn.rotation);
     }
 
@@ -122,5 +129,22 @@ public class WeaponController : MonoBehaviour
         textobalas.text = numerobalas.ToString();
 
 
+    }
+
+    void CheckArma()
+    {
+        if (VidaDeArma == 0)
+        {
+            armarota = true;
+           
+
+
+        }
+        else
+        {
+          armarota = false;
+  
+
+        }
     }
 }
