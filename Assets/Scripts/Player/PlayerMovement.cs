@@ -209,6 +209,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ForzarsetARMA(GameObject _arma)
     {
+<<<<<<< HEAD
         if (armaactiva == 1)
         {
 
@@ -218,6 +219,9 @@ public class PlayerMovement : MonoBehaviour
         {
             ArmaActiva2 = _arma;
         }
+=======
+        
+>>>>>>> 15c881060cb3c7dc5c46389e6121d708cb85ece1
 
     }
     public void SetArma1(GameObject _arma)
