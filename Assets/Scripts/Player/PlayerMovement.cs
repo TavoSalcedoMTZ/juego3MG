@@ -200,7 +200,7 @@ public class PlayerMovement : MonoBehaviour
 
     void CheckOperacion()
     {
-        if()
+        
 
     }
     public void SetArma1(GameObject _arma)
