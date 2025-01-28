@@ -16,9 +16,24 @@ public class BulletController : MonoBehaviour
         bullrb.linearVelocity= this.transform.forward*bulletPower;
 
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Obtiene el componente EnemigoDamage del objeto con el que colisionas
+        EnemigoDamage enemigoDamage = collision.gameObject.GetComponent<EnemigoDamage>();
 
+        // Verifica si el componente existe
+        if (enemigoDamage != null)
+        {
+
+            enemigoDamage.RecibirDano();
+        }
+        else
+        {
+       
+        }
+    }
     // Update is called once per frame
-   public void FixedUpdate()
+    public void FixedUpdate()
     {
         time+= Time.deltaTime;
 
