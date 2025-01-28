@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -18,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded, canMove;
     private CharacterController characterController;
      public bool ForzandoSwitch;
-    public bool operacioncompletada;
+    public int armaactiva = 0;
 
 
     private void Start()
@@ -36,13 +37,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
 
     {
-        if (comprobadorDeVariables.ForzarSwitchBool)
-        {
-            ForzandoSwitch = true;
-        }
-        {
-            ForzandoSwitch = false;
-        }
+
 
         if (!tienda.TiendaOpen)
         {
@@ -62,6 +57,16 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+        }
+
+        if (ArmaActiva1.activeInHierarchy)
+        {
+            armaactiva = 1;
+
+        }
+        else if (ArmaActiva2.activeInHierarchy)
+        {
+            armaactiva = 2;
         }
     }
 
@@ -161,15 +166,16 @@ public class PlayerMovement : MonoBehaviour
 
     public void SwitchArmas()
     {
-        if (ArmaActiva1.activeInHierarchy)
+        if (armaactiva==1)
         {
-            if (ForzandoSwitch)
+            if ((comprobadorDeVariables.ForzarSwitchBool) && armaactiva==1)
             {
-                SetArma1(Desarmado);
                 ArmaActiva1.SetActive(false);
-                ArmaActiva2.SetActive(true);
-                ForzandoSwitch = false;
-                operacioncompletada = true;
+                ForzarsetARMA(Desarmado);
+                comprobadorDeVariables.ForzarSwitchBool = false;
+                ArmaActiva1.SetActive(true);
+                SwitchArmas();
+
 
             }
             else
@@ -179,15 +185,18 @@ public class PlayerMovement : MonoBehaviour
                 ArmaActiva2.SetActive(true);
             }
         }
-        else if (ArmaActiva2.activeInHierarchy)
+        else if (armaactiva==2)
         {
-            if (ForzandoSwitch)
+
+            if (comprobadorDeVariables.ForzarSwitchBool && armaactiva==2)
             {
-                SetArma2(Desarmado);
                 ArmaActiva2.SetActive(false);
-                ArmaActiva1.SetActive(true);
-                ForzandoSwitch=false;
-                operacioncompletada = true;
+                ForzarsetARMA(Desarmado);
+                comprobadorDeVariables.ForzarSwitchBool = false;
+                ArmaActiva2.SetActive(true);
+                SwitchArmas();
+
+
             }
             else
             {
@@ -198,9 +207,17 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void CheckOperacion()
+    private void ForzarsetARMA(GameObject _arma)
     {
-        if()
+        if (armaactiva == 1)
+        {
+
+            ArmaActiva1 = _arma;
+        }
+        else if(armaactiva == 2)
+        {
+            ArmaActiva2 = _arma;
+        }
 
     }
     public void SetArma1(GameObject _arma)
@@ -230,7 +247,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            ArmaActiva2          = _arma;
+            ArmaActiva2= _arma;
 
         }
     }

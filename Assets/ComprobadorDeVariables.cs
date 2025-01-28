@@ -16,9 +16,9 @@ public class ComprobadorDeVariables : MonoBehaviour
 
     void Start()
     {
-        CanSwitch=true;
+        CanSwitch = true;
+        ForzarSwitchBool = false;
 
-        
     }
 
 
@@ -30,14 +30,15 @@ public class ComprobadorDeVariables : MonoBehaviour
         }
         else
         {
-            CanSwitch=true;
+            CanSwitch = true;
         }
 
 
 
-        ForzarSwitch();
+
+
     }
-    void ForzarSwitch()
+    public void ForzarSwitch()
     {
         if (weapons1.armarota || weapons2.armarota || weapons3.armarota || weapons4.armarota)
         {
@@ -45,21 +46,9 @@ public class ComprobadorDeVariables : MonoBehaviour
         }
         else
         {
-            ForzarSwitchBool=false;
         }
 
     }
 
-    void VerificarOperacion()
-    {
-        if (player.operacioncompletada)
-        {
-            ForzarSwitchBool = false;
-
-        }
-        else
-        {
-
-        }
-    }
+    
 }

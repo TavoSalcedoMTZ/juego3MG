@@ -17,6 +17,7 @@ public class WeaponController : MonoBehaviour
     public TextMeshProUGUI textobalas;
     public ComprobadorDeVariables comprobadorDeVariables;
     public float VidaDeArma=100f;
+    private float vidainicialarma;
     public float DecrementoVidaArma=5;
     public bool armarota;
 
@@ -28,6 +29,11 @@ public class WeaponController : MonoBehaviour
 
     void Start()
     {
+        vidainicialarma = VidaDeArma;
+        if (comprobadorDeVariables == null)
+        {
+            comprobadorDeVariables = FindObjectOfType<ComprobadorDeVariables>();
+        }
         timeSinceLastShot = cadencia;
         cantidaddebalascargador = numerobalas;
         canShoot=true;
@@ -136,7 +142,7 @@ public class WeaponController : MonoBehaviour
         if (VidaDeArma == 0)
         {
             armarota = true;
-           
+            comprobadorDeVariables.ForzarSwitch();
 
 
         }
@@ -144,6 +150,20 @@ public class WeaponController : MonoBehaviour
         {
           armarota = false;
   
+
+        }
+    }
+
+    public void SetRota(bool valor)
+    {
+        if (valor)
+        {
+            armarota=true; 
+        }
+        else if (!valor)
+        {
+            armarota = false;
+            VidaDeArma = vidainicialarma;
 
         }
     }
