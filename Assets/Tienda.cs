@@ -14,12 +14,12 @@ public class Tienda : MonoBehaviour
     public int DineroPlayer;
 
     // Referencia al componente TextMeshPro
-    public TextMeshProUGUI DineroText; 
+    public TextMeshProUGUI DineroText;
 
     void Start()
     {
         TiendaOpen = false;
-        ActualizarDineroText();  
+        ActualizarDineroText();
     }
 
     void Update()
@@ -28,7 +28,7 @@ public class Tienda : MonoBehaviour
         {
             SwitchTienda();
         }
-      ActualizarDineroText();
+        ActualizarDineroText();
     }
 
     public void SwitchTienda()
@@ -54,7 +54,7 @@ public class Tienda : MonoBehaviour
         if (DineroPlayer >= costo)
         {
             DineroPlayer -= costo;
-            ActualizarDineroText();  
+            ActualizarDineroText();
 
             if (tipoarma == 1)
             {
@@ -90,6 +90,21 @@ public class Tienda : MonoBehaviour
     public void CompraSubfusil()
     {
         CompraArma(subfusil, 2, 20);
+    }
+    public void ComprarCuras()
+    {
+        if (DineroPlayer >= 50)
+        {
+            DineroPlayer -= 50;
+            ActualizarDineroText();
+
+            playerlife.Curar();
+        }
+        else
+        {
+            Debug.Log("Dinero Insuficiente");
+        }
+
     }
 
 

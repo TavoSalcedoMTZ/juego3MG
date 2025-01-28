@@ -46,9 +46,9 @@ public class PlayerLife : MonoBehaviour
         VidaPlayer = Mathf.Clamp(VidaPlayer, 0, VidaMaximaPlayer);
     }
 
-    public void Curar(int cantidad)
+    public void Curar()
     {
-        VidaPlayer += cantidad;
-        VidaPlayer = Mathf.Clamp(VidaPlayer, 0, VidaMaximaPlayer);
+        VidaPlayer = VidaMaximaPlayer;
+       
     }
 }
